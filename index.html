@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SafeRoute AI — Safer Navigation</title>
+
+    <meta
+        name="description"
+        content="SafeRoute AI finds safer routes using safety risk, road quality, lighting and community hazards."
+    >
+
+    <link
+        rel="stylesheet"
+        href="styles.css"
+    >
+
+</head>
+
+<body>
+
+<!-- =====================================================
+     TOP NAVIGATION
+===================================================== -->
+
+<header class="topbar">
+
+    <div class="brand">
+
+        <div class="brand-mark">
+            🛡️
+        </div>
+
+        <div>
+
+            <div class="brand-name">
+                SafeRoute AI
+            </div>
+
+            <div class="brand-subtitle">
+                Safety-first navigation
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="topbar-right">
+
+        <div class="status">
+
+            <span class="status-dot"></span>
+
+            <span>
+                Local engine online
+            </span>
+
+        </div>
+
+        <button
+            id="emergencyButton"
+            class="emergency-btn"
+        >
+            🚨 Emergency
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="eyebrow">
+            SMART MOBILITY · PUBLIC SAFETY
+        </div>
+
+        <h1>
+            Don't just find a route.
+            <span>Find a safer route.</span>
+        </h1>
+
+        <p class="hero-description">
+
+            SafeRoute AI analyzes route risk, road quality,
+            lighting, incidents and travel conditions to help
+            you choose a safer journey.
+
+        </p>
+
+
+        <!-- =================================================
+             ROUTE PLANNER
+        ================================================= -->
+
+        <div class="planner card">
+
+            <div class="planner-row">
+
+
+                <!-- FROM -->
+
+                <div class="field">
+
+                    <label for="from">
+                        FROM
+                    </label>
+
+                    <select id="from"></select>
+
+                </div>
+
+
+                <!-- SWAP -->
+
+                <button
+                    id="swapRoute"
+                    class="swap-btn"
+                    type="button"
+                    title="Swap route"
+                >
+                    ⇄
+                </button>
+
+
+                <!-- TO -->
+
+                <div class="field">
+
+                    <label for="to">
+                        TO
+                    </label>
+
+                    <select id="to"></select>
+
+                </div>
+
+
+                <!-- MODE -->
+
+                <div class="field">
+
+                    <label for="mode">
+                        MODE
+                    </label>
+
+                    <select id="mode">
+
+                        <option value="car">
+                            🚗 Car
+                        </option>
+
+                        <option value="bike">
+                            🏍️ Bike
+                        </option>
+
+                        <option value="walk">
+                            🚶 Walk
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- TIME -->
+
+                <div class="field">
+
+                    <label for="travelTime">
+                        TIME
+                    </label>
+
+                    <select id="travelTime">
+
+                        <option value="day">
+                            ☀️ Day
+                        </option>
+
+                        <option value="evening">
+                            🌇 Evening
+                        </option>
+
+                        <option value="night">
+                            🌙 Night
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- FIND ROUTES -->
+
+                <button
+                    id="findRoutes"
+                    class="primary-btn"
+                    type="button"
+                >
+                    Find Safer Routes
+                    <span>→</span>
+                </button>
+
+            </div>
+
+
+            <!-- QUICK ROUTES -->
+
+            <div class="quick-routes">
+
+                <span>
+                    Quick demo:
+                </span>
+
+                <button
+                    type="button"
+                    data-demo="station-nirma"
+                >
+                    Railway Station → Nirma
+                </button>
+
+                <button
+                    type="button"
+                    data-demo="airport-nirma"
+                >
+                    Airport → Nirma
+                </button>
+
+                <button
+                    type="button"
+                    data-demo="ashram-lawgarden"
+                >
+                    Ashram → Law Garden
+                </button>
+
+                <button
+                    type="button"
+                    data-demo="indus-nirma"
+                >
+                    Indus → Nirma
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     MAIN DASHBOARD
+===================================================== -->
+
+<main class="dashboard">
+
+
+    <!-- =================================================
+         MAP
+    ================================================= -->
+
+    <section class="map-section">
+
+        <div class="section-header">
+
+            <div>
+
+                <div class="section-kicker">
+                    LIVE ROUTE MAP
+                </div>
+
+                <h2>
+                    Local Safety Network
+                </h2>
+
+            </div>
+
+            <div class="map-status">
+                ● Local data
+            </div>
+
+        </div>
+
+
+        <div class="map-wrapper card">
+
+            <svg
+                id="mapSvg"
+                class="map-svg"
+                viewBox="0 0 760 620"
+                preserveAspectRatio="xMidYMid meet"
+            >
+
+                <rect
+                    class="map-background"
+                    x="0"
+                    y="0"
+                    width="760"
+                    height="620"
+                    rx="20"
+                ></rect>
+
+                <path
+                    class="river"
+                    d="M560 0
+                       C510 80 570 130 530 210
+                       C490 290 555 350 520 430
+                       C490 510 550 570 520 620"
+                ></path>
+
+                <!-- Roads and route layers are drawn by app.js -->
+
+                <g id="mapRoads"></g>
+
+                <g id="mapRoutes"></g>
+
+                <g id="mapNodes"></g>
+
+                <g id="mapHazards"></g>
+
+            </svg>
+
+
+            <!-- MAP CONTROLS -->
+
+            <div class="map-controls">
+
+                <button
+                    id="zoomIn"
+                    type="button"
+                >
+                    +
+                </button>
+
+                <button
+                    id="zoomOut"
+                    type="button"
+                >
+                    −
+                </button>
+
+                <button
+                    id="resetZoom"
+                    type="button"
+                >
+                    ⌂
+                </button>
+
+            </div>
+
+
+            <!-- LEGEND -->
+
+            <div class="map-legend">
+
+                <div>
+                    <span class="legend-line safe"></span>
+                    Safer
+                </div>
+
+                <div>
+                    <span class="legend-line caution"></span>
+                    Caution
+                </div>
+
+                <div>
+                    <span class="legend-line risk"></span>
+                    Higher risk
+                </div>
+
+                <div>
+                    <span class="legend-dot"></span>
+                    Hazard
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         ROUTE ANALYSIS
+    ================================================= -->
+
+    <section>
+
+        <div class="section-header">
+
+            <div>
+
+                <div class="section-kicker">
+                    ROUTE ANALYSIS
+                </div>
+
+                <h2>
+                    Compare your options
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="routeCards"
+            class="route-cards"
+        >
+
+            <div class="card route-card">
+
+                <div class="route-card-header">
+
+                    <span class="route-label">
+                        READY
+                    </span>
+
+                </div>
+
+                <h3>
+                    Choose your destination
+                </h3>
+
+                <p>
+                    Select an origin and destination above,
+                    then click "Find Safer Routes".
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             AI RECOMMENDATION
+        ================================================= -->
+
+        <div
+            id="aiRecommendation"
+            class="ai-panel card"
+        >
+
+            <div class="ai-title">
+                🤖 AI Safety Analyst
+            </div>
+
+            <p>
+                The external AI safety analyst will evaluate
+                your routes after you search.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         WHY THIS ROUTE
+    ================================================= -->
+
+    <section>
+
+        <div class="section-header">
+
+            <div>
+
+                <div class="section-kicker">
+                    SAFETY BREAKDOWN
+                </div>
+
+                <h2>
+                    Why this route?
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="card why-route">
+
+            <div>
+
+                <h3 id="whyRouteTitle">
+                    Select a route
+                </h3>
+
+                <p id="whyRouteText">
+                    Route safety information will appear here.
+                </p>
+
+            </div>
+
+
+            <div class="factor-grid">
+
+
+                <div class="factor">
+
+                    <span class="factor-label">
+                        ROAD QUALITY
+                    </span>
+
+                    <strong id="roadQuality">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="factor">
+
+                    <span class="factor-label">
+                        INCIDENTS
+                    </span>
+
+                    <strong id="incidentCount">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="factor">
+
+                    <span class="factor-label">
+                        LIGHTING
+                    </span>
+
+                    <strong id="lightingStatus">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="factor">
+
+                    <span class="factor-label">
+                        TIME RISK
+                    </span>
+
+                    <strong id="timeRisk">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         COMMUNITY REPORTING
+    ================================================= -->
+
+    <section>
+
+        <div class="section-header">
+
+            <div>
+
+                <div class="section-kicker">
+                    COMMUNITY SAFETY
+                </div>
+
+                <h2>
+                    Report a hazard
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="community-grid">
+
+
+            <div class="card community-form">
+
+
+                <div class="field">
+
+                    <label for="hazardType">
+                        HAZARD TYPE
+                    </label>
+
+                    <select id="hazardType">
+
+                        <option value="accident">
+                            Accident
+                        </option>
+
+                        <option value="pothole">
+                            Pothole
+                        </option>
+
+                        <option value="blocked">
+                            Blocked road
+                        </option>
+
+                        <option value="lighting">
+                            Poor lighting
+                        </option>
+
+                        <option value="other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label for="hazardLocation">
+                        LOCATION
+                    </label>
+
+                    <select id="hazardLocation"></select>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label for="hazardNote">
+                        NOTE
+                    </label>
+
+                    <textarea
+                        id="hazardNote"
+                        rows="3"
+                        placeholder="Describe the issue..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="community-actions">
+
+                    <button
+                        id="addHazard"
+                        class="primary-btn"
+                        type="button"
+                    >
+                        Report Hazard
+                    </button>
+
+                    <button
+                        id="toggleRisk"
+                        class="secondary-btn"
+                        type="button"
+                    >
+                        Toggle Risk Zones
+                    </button>
+
+                    <button
+                        id="clearReports"
+                        class="secondary-btn"
+                        type="button"
+                    >
+                        Clear My Reports
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="card community-info">
+
+                <h3>
+                    Community-powered safety
+                </h3>
+
+                <p>
+                    Reports help SafeRoute AI identify local
+                    hazards and improve route safety analysis.
+                </p>
+
+                <div class="community-note">
+                    Reports are stored locally in your browser
+                    for this demo.
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         HOW IT WORKS
+    ================================================= -->
+
+    <section>
+
+        <div class="section-header">
+
+            <div>
+
+                <div class="section-kicker">
+                    HOW IT WORKS
+                </div>
+
+                <h2>
+                    Safety before speed
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="steps">
+
+
+            <div class="step card">
+
+                <span>
+                    01
+                </span>
+
+                <h3>
+                    Build routes
+                </h3>
+
+                <p>
+                    The local route engine calculates multiple
+                    possible paths between locations.
+                </p>
+
+            </div>
+
+
+            <div class="step card">
+
+                <span>
+                    02
+                </span>
+
+                <h3>
+                    Score risk
+                </h3>
+
+                <p>
+                    Roads are evaluated using incidents,
+                    lighting, quality and travel conditions.
+                </p>
+
+            </div>
+
+
+            <div class="step card">
+
+                <span>
+                    03
+                </span>
+
+                <h3>
+                    AI explains
+                </h3>
+
+                <p>
+                    An external LLM analyzes the route data
+                    and explains which option is safer.
+                </p>
+
+            </div>
+
+
+            <div class="step card">
+
+                <span>
+                    04
+                </span>
+
+                <h3>
+                    You decide
+                </h3>
+
+                <p>
+                    You always see the safety factors before
+                    choosing your route.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =====================================================
+     EMERGENCY MODAL
+===================================================== -->
+
+<div
+    id="emergencyModal"
+    class="modal"
+>
+
+    <div class="modal-content card">
+
+        <button
+            id="closeEmergency"
+            class="modal-close"
+            type="button"
+        >
+            ×
+        </button>
+
+        <div class="modal-icon">
+            🚨
+        </div>
+
+        <h2>
+            Emergency assistance
+        </h2>
+
+        <p>
+            This demo can help identify your browser
+            location. For a real emergency, contact your
+            local emergency service.
+        </p>
+
+        <button
+            id="locateUser"
+            class="primary-btn"
+            type="button"
+        >
+            Locate Me
+        </button>
+
+        <div id="locationResult"></div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     TOAST
+===================================================== -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
